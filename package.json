@@ -1,0 +1,59 @@
+{
+  "name": "slack-opener",
+  "displayName": "Slack Opener",
+  "description": "Open Slack archive permalinks and slack:// links in the Slack app, not the browser.",
+  "version": "0.1.0",
+  "publisher": "codenoevil",
+  "author": "David Bitton",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeNoEvil/vscode-slack-opener.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CodeNoEvil/vscode-slack-opener/issues"
+  },
+  "homepage": "https://github.com/CodeNoEvil/vscode-slack-opener#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "keywords": ["slack", "permalink", "slack://", "opener", "archive"],
+  "icon": "media/icon.png",
+  "activationEvents": [
+    "onStartupFinished",
+    "onUri"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "slackOpener.open",
+        "title": "Open Slack URL",
+        "category": "Slack"
+      }
+    ],
+    "configuration": {
+      "title": "Slack Opener",
+      "properties": {
+        "slackOpener.teamId": {
+          "type": "string",
+          "default": "T061A7A7K0U",
+          "description": "Workspace team ID used when an archive permalink has no team (TeachX default)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "tsc -p ./ && node --test out/slackUrl.test.js",
+    "vscode:prepublish": "npm run compile",
+    "package": "npx --yes @vscode/vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.8.3"
+  }
+}
