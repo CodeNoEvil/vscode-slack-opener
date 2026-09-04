@@ -26,8 +26,11 @@ https://acme.slack.com/archives/C01234567/p1234567890123456
   → slack://channel?team=T01234567&id=C01234567&message=1234567890.123456
 ```
 
-Set `slackOpener.teamId` to your workspace team ID when an archive
-permalink has none. The team ID is the `T…` value in a `slack://` URL.
+Set `slackOpener.teamId` (`T…`) when an archive permalink has no team.
+Set `slackOpener.channelId` (`C…`) when a link has a team but no
+channel, or to prefill the command with a workspace home. Archive
+permalinks already carry their channel; the setting does not override
+it.
 
 ## Install
 
@@ -50,7 +53,7 @@ Either download the latest `slack-opener-*.vsix` from **Actions → package
 3. Install it:
 
    ```bash
-   code --install-extension slack-opener-0.1.1.vsix
+   code --install-extension slack-opener-0.1.2.vsix
    ```
 
    Or **Extensions → … → Install from VSIX…**. Then **Developer: Reload Window**.
@@ -63,7 +66,8 @@ Either download the latest `slack-opener-*.vsix` from **Actions → package
 
    | Setting | Default | Meaning |
    | --- | --- | --- |
-   | `slackOpener.teamId` | _(empty)_ | Workspace team ID when an archive permalink has none. |
+   | `slackOpener.teamId` | _(empty)_ | Workspace team ID (`T…`) when a Slack URL has no team. |
+   | `slackOpener.channelId` | _(empty)_ | Channel ID (`C…`) when a Slack URL has no channel, or to prefill the command. |
 
 ## Use
 

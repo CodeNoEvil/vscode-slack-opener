@@ -10,7 +10,29 @@ export function permalinkToMessageTs(raw: string): string {
 const ARCHIVE =
   /^https?:\/\/(?:[a-z0-9-]+\.)?slack\.com\/archives\/([A-Z0-9]+)(?:\/p(\d+))?/i;
 const APP_CLIENT =
-  /^https?:\/\/app\.slack\.com\/client\/(T[A-Z0-9]+)\/([A-Z0-9]+)/i;
+  /^https?:\/\/app\.slack\.com\/client\/(T[A-Z0-9]+)(?:\/([A-Z0-9]+))?/i;
+const WORKSPACE =
+  /^https?:\/\/([a-z0-9-]+)\.slack\.com\/?(\?.*)?$/i;
+
+function channelUri(
+  team: string | undefined,
+  channel: string | undefined,
+  message?: string,
+): string | undefined {
+  const t = team?.trim();
+  const c = channel?.trim();
+  if (!t || !c) {
+    return undefined;
+  }
+  const parts = [
+    `team=${encodeURIComponent(t)}`,
+    `id=${encodeURIComponent(c)}`,
+  ];
+  if (message) {
+    parts.push(`message=${encodeURIComponent(message)}`);
+  }
+  return `slack://channel?${parts.join("&")}`;
+}
 
 /**
  * Turn a Slack web permalink or slack:// URI into a native slack:// app URI.
@@ -19,6 +41,7 @@ const APP_CLIENT =
 export function toSlackAppUri(
   raw: string,
   defaultTeamId: string,
+  defaultChannelId = "",
 ): string | undefined {
   const s = raw.trim();
   if (!s) {
@@ -30,39 +53,32 @@ export function toSlackAppUri(
 
   const client = s.match(APP_CLIENT);
   if (client) {
-    return `slack://channel?team=${client[1]}&id=${client[2]}`;
+    return channelUri(client[1], client[2] || defaultChannelId);
   }
 
   const archive = s.match(ARCHIVE);
-  if (!archive) {
-    return undefined;
+  if (archive) {
+    let url: URL;
+    try {
+      url = new URL(s);
+    } catch {
+      return undefined;
+    }
+    const team =
+      url.searchParams.get("team") || defaultTeamId.trim() || undefined;
+    const p = archive[2];
+    return channelUri(
+      team,
+      archive[1],
+      p ? permalinkToMessageTs(p) : undefined,
+    );
   }
 
-  let url: URL;
-  try {
-    url = new URL(s);
-  } catch {
-    return undefined;
+  if (WORKSPACE.test(s) && !/^https?:\/\/app\.slack\.com/i.test(s)) {
+    return channelUri(defaultTeamId, defaultChannelId);
   }
 
-  const channel = archive[1];
-  const p = archive[2];
-  const team =
-    url.searchParams.get("team") ||
-    defaultTeamId.trim() ||
-    undefined;
-  if (!team) {
-    return undefined;
-  }
-
-  const parts = [
-    `team=${encodeURIComponent(team)}`,
-    `id=${encodeURIComponent(channel)}`,
-  ];
-  if (p) {
-    parts.push(`message=${encodeURIComponent(permalinkToMessageTs(p))}`);
-  }
-  return `slack://channel?${parts.join("&")}`;
+  return undefined;
 }
 
 /** Find slack:// and slack.com archive / client links in a line of text. */

@@ -46,6 +46,35 @@ describe("toSlackAppUri", () => {
     );
   });
 
+  it("uses the configured channel when a client URL has none", () => {
+    const raw = "https://app.slack.com/client/T01234567";
+    assert.equal(
+      toSlackAppUri(raw, TEAM, "C99999999"),
+      "slack://channel?team=T01234567&id=C99999999",
+    );
+  });
+
+  it("uses team and channel settings for a workspace home URL", () => {
+    assert.equal(
+      toSlackAppUri("https://acme.slack.com", TEAM, "C01234567"),
+      "slack://channel?team=T01234567&id=C01234567",
+    );
+  });
+
+  it("does not replace a permalink channel with the setting", () => {
+    assert.equal(
+      toSlackAppUri("https://acme.slack.com/archives/C01234567", TEAM, "C99999999"),
+      "slack://channel?team=T01234567&id=C01234567",
+    );
+  });
+
+  it("rejects a client URL with no channel and no setting", () => {
+    assert.equal(
+      toSlackAppUri("https://app.slack.com/client/T01234567", TEAM),
+      undefined,
+    );
+  });
+
   it("rejects non-Slack URLs", () => {
     assert.equal(toSlackAppUri("https://example.com", TEAM), undefined);
   });

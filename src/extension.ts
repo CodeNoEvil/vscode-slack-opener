@@ -9,8 +9,27 @@ function teamId(): string {
     .get<string>("teamId", "");
 }
 
+function channelId(): string {
+  return vscode.workspace
+    .getConfiguration("slackOpener")
+    .get<string>("channelId", "");
+}
+
+function convert(raw: string): string | undefined {
+  return toSlackAppUri(raw, teamId(), channelId());
+}
+
+function homeUri(): string | undefined {
+  const team = teamId().trim();
+  const channel = channelId().trim();
+  if (!team || !channel) {
+    return undefined;
+  }
+  return `slack://channel?team=${encodeURIComponent(team)}&id=${encodeURIComponent(channel)}`;
+}
+
 async function openSlack(raw: string): Promise<boolean> {
-  const href = toSlackAppUri(raw, teamId());
+  const href = convert(raw);
   if (!href) {
     vscode.window.showErrorMessage(`Not a Slack link I understand: ${raw}`);
     return false;
@@ -35,8 +54,9 @@ export function activate(context: vscode.ExtensionContext): void {
       const selected = editor?.document.getText(editor.selection).trim();
       const clip = await vscode.env.clipboard.readText();
       const guess =
-        (selected && toSlackAppUri(selected, teamId()) && selected) ||
-        (clip && toSlackAppUri(clip, teamId()) && clip) ||
+        (selected && convert(selected) && selected) ||
+        (clip && convert(clip) && clip) ||
+        homeUri() ||
         "";
       const raw = await vscode.window.showInputBox({
         title: "Open in Slack app",
