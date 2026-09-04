@@ -4,6 +4,8 @@ Clicks on `slack://` inside the editor do nothing — VS Code will not own
 that scheme. This extension opens Slack.app via `vscode.env.openExternal`,
 same as `open 'slack://…'` on macOS.
 
+![Slack Opener converts an archive permalink or slack:// link and opens it in Slack.app](media/how-it-works.png)
+
 ## What it does
 
 | Surface | Behavior |
