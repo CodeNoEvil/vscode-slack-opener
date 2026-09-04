@@ -12,8 +12,8 @@ jobs:
   vsix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -24,7 +24,7 @@ jobs:
         run: npm test
       - name: Package VSIX
         run: npm run package
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: slack-opener-${{ github.sha }}
           path: slack-opener-*.vsix
