@@ -15,18 +15,19 @@ same as `open 'slack://…'` on macOS.
 | Same links in the **terminal** | Click → Slack.app |
 | `vscode://codenoevil.slack-opener/open?u=…` | UriHandler for anything that can emit a `vscode://` link |
 
-It does **not** intercept Grok chat / markdown preview clicks on raw
+It does **not** intercept markdown preview or chat-webview clicks on raw
 `slack://`. Use an https archive permalink and run **Slack: Open Slack URL**
 (clipboard), or put the link in a file/terminal.
 
 ## Converted URL
 
 ```
-https://teachxai.slack.com/archives/C0BKPQC9RCP/p1788460005447479
-  → slack://channel?team=T061A7A7K0U&id=C0BKPQC9RCP&message=1788460005.447479
+https://acme.slack.com/archives/C01234567/p1234567890123456
+  → slack://channel?team=T01234567&id=C01234567&message=1234567890.123456
 ```
 
-Team ID defaults to TeachX (`T061A7A7K0U`). Override with `slackOpener.teamId`.
+Set `slackOpener.teamId` to your workspace team ID when an archive
+permalink has none. The team ID is the `T…` value in a `slack://` URL.
 
 ## Install
 
@@ -49,7 +50,7 @@ Either download the latest `slack-opener-*.vsix` from **Actions → package
 3. Install it:
 
    ```bash
-   code --install-extension slack-opener-0.1.0.vsix
+   code --install-extension slack-opener-0.1.1.vsix
    ```
 
    Or **Extensions → … → Install from VSIX…**. Then **Developer: Reload Window**.
@@ -62,13 +63,13 @@ Either download the latest `slack-opener-*.vsix` from **Actions → package
 
    | Setting | Default | Meaning |
    | --- | --- | --- |
-   | `slackOpener.teamId` | `T061A7A7K0U` | Workspace team ID when an archive permalink has none (TeachX). |
+   | `slackOpener.teamId` | _(empty)_ | Workspace team ID when an archive permalink has none. |
 
 ## Use
 
 - Command Palette: **Slack: Open Slack URL**
 - Click a Slack permalink or `slack://` link in a file or the terminal
 - From anything that can emit a URI:
-  `vscode://codenoevil.slack-opener/open?u=https%3A%2F%2Fteachxai.slack.com%2Farchives%2F…`
+  `vscode://codenoevil.slack-opener/open?u=https%3A%2F%2Facme.slack.com%2Farchives%2F…`
 
 F5 from this folder still works (Extension Development Host).

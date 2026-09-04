@@ -2,7 +2,7 @@
   "name": "slack-opener",
   "displayName": "Slack Opener",
   "description": "Open Slack archive permalinks and slack:// links in the Slack app, not the browser.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "codenoevil",
   "author": "David Bitton",
   "license": "MIT",
@@ -38,8 +38,8 @@
       "properties": {
         "slackOpener.teamId": {
           "type": "string",
-          "default": "T061A7A7K0U",
-          "description": "Workspace team ID used when an archive permalink has no team (TeachX default)."
+          "default": "",
+          "description": "Workspace team ID used when an archive permalink has no team. Find it in a slack:// URL or in the Slack desktop app under the workspace menu."
         }
       }
     }

@@ -6,7 +6,7 @@ const COMMAND = "slackOpener.open";
 function teamId(): string {
   return vscode.workspace
     .getConfiguration("slackOpener")
-    .get<string>("teamId", "T061A7A7K0U");
+    .get<string>("teamId", "");
 }
 
 async function openSlack(raw: string): Promise<boolean> {
